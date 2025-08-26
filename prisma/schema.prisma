@@ -1,0 +1,80 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum OrderStatus {
+  PENDING
+  APPROVED
+  DECLINED
+  EXPIRED
+}
+
+enum PaymentMethod {
+  PIX
+  CARD
+}
+
+enum PaymentStatus {
+  PENDING
+  APPROVED
+  DECLINED
+  EXPIRED
+}
+
+model Product {
+  id         String   @id @default(cuid())
+  name       String
+  priceCents Int
+  seller     String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  orders     Order[]
+}
+
+model Order {
+  id            String        @id @default(cuid())
+  productId     String
+  amountCents   Int
+  method        PaymentMethod
+  status        OrderStatus   @default(PENDING)
+  customerName  String
+  customerEmail String
+  customerCpf   String
+  customerPhone String
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  product  Product   @relation(fields: [productId], references: [id])
+  payments Payment[]
+
+  @@index([productId])
+  @@index([status])
+}
+
+model Payment {
+  id      String        @id @default(cuid())
+  orderId String
+  method  PaymentMethod
+  status  PaymentStatus @default(PENDING)
+
+  last4 String?
+  brand String?
+  token String?
+
+  txid      String?
+  qrBase64  String?
+  copyPaste String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  order Order @relation(fields: [orderId], references: [id])
+
+  @@index([orderId])
+  @@index([method, status])
+}
