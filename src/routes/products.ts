@@ -9,7 +9,7 @@ router.get("/", async (_req, res) => {
 });
 
 router.get("/:id", async (req, res) => {
-  const { id } = req.params; // id é string (no nosso schema o Product.id é String)
+  const { id } = req.params;
   const product = await prisma.product.findUnique({ where: { id } });
   if (!product) return res.status(404).json({ error: "product_not_found" });
   res.json(product);

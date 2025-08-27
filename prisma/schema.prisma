@@ -64,9 +64,9 @@ model Payment {
 
   last4 String?
   brand String?
-  token String?
+  token String? @unique
 
-  txid      String?
+  txid      String? @unique
   qrBase64  String?
   copyPaste String?
 
@@ -77,4 +77,5 @@ model Payment {
 
   @@index([orderId])
   @@index([method, status])
+  @@index([createdAt])
 }
