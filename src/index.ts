@@ -6,8 +6,10 @@ import webhooksPix from "./routes/webhooks.pix";
 import paymentsCard from "./routes/payments.card";
 import orders from "./routes/orders";
 import { errorHandler } from "./lib/errors";
+import { startIdempotencyTTLWorker } from "./workers/idempotency-ttl";
 
 const app = buildServer();
+startIdempotencyTTLWorker();
 
 app.use("/products", products);
 app.use("/payments/pix", paymentsPix);

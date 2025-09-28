@@ -14,11 +14,9 @@ async function main() {
       update: { name: p.name, priceCents: p.priceCents, seller: p.seller },
       create: p,
     });
-    console.log("Upserted:", r.id);
   }
 
   const count = await prisma.product.count();
-  console.log("Total products:", count);
 }
 
 main()

@@ -26,6 +26,11 @@ enum PaymentStatus {
   EXPIRED
 }
 
+enum IdemState {
+  PENDING
+  COMPLETED
+}
+
 model Product {
   id         String   @id @default(cuid())
   name       String
@@ -77,5 +82,20 @@ model Payment {
 
   @@index([orderId])
   @@index([method, status])
+  @@index([createdAt])
+}
+
+model Idempotency {
+  key         String   @id
+  method      String
+  path        String
+  requestHash String
+  statusCode  Int?
+  response    Json?
+  state       IdemState @default(PENDING)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([state, createdAt])
   @@index([createdAt])
 }
